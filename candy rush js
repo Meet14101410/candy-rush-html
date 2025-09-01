@@ -1,0 +1,147 @@
+// candy-rush.js
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const scoreDisplay = document.getElementById("score");
+const startBtn = document.getElementById("startBtn");
+const overlay = document.getElementById("overlay");
+const playAgain = document.getElementById("playAgain");
+const muteBtn = document.getElementById("muteBtn");
+
+// Game state
+let gameRunning = false;
+let score = 0;
+let gravity = 0.5;
+
+// Player
+const player = {
+  x: 50,
+  y: canvas.height - 80,
+  width: 40,
+  height: 40,
+  dy: 0,
+  jumpPower: -10,
+  color: "#ff6fb5"
+};
+
+// Obstacles
+let obstacles = [];
+let obstacleTimer = 0;
+
+// Sounds
+let muted = false;
+const jumpSound = new Audio(
+  "https://cdn.pixabay.com/download/audio/2022/03/15/audio_3a7e1e1adf.mp3"
+);
+
+// Start game
+function startGame() {
+  gameRunning = true;
+  score = 0;
+  player.y = canvas.height - player.height - 10;
+  player.dy = 0;
+  obstacles = [];
+  overlay.classList.add("hidden");
+  animate();
+}
+
+// Player jump
+function jump() {
+  if (player.y >= canvas.height - player.height - 10) {
+    player.dy = player.jumpPower;
+    if (!muted) jumpSound.play();
+  }
+}
+
+// Handle obstacles
+function spawnObstacle() {
+  const size = 30 + Math.random() * 20;
+  obstacles.push({
+    x: canvas.width,
+    y: canvas.height - size - 10,
+    width: size,
+    height: size,
+    color: "#ffb84d"
+  });
+}
+
+function updateObstacles() {
+  obstacleTimer++;
+  if (obstacleTimer > 90) {
+    spawnObstacle();
+    obstacleTimer = 0;
+  }
+  obstacles.forEach((ob, i) => {
+    ob.x -= 5;
+    if (ob.x + ob.width < 0) {
+      obstacles.splice(i, 1);
+      score++;
+      scoreDisplay.textContent = "Score: " + score;
+    }
+  });
+}
+
+// Check collisions
+function checkCollision() {
+  for (let ob of obstacles) {
+    if (
+      player.x < ob.x + ob.width &&
+      player.x + player.width > ob.x &&
+      player.y < ob.y + ob.height &&
+      player.y + player.height > ob.y
+    ) {
+      gameOver();
+    }
+  }
+}
+
+// Game over
+function gameOver() {
+  gameRunning = false;
+  overlay.classList.remove("hidden");
+  document.getElementById("overlayTitle").textContent = "Game Over!";
+}
+
+// Animate
+function animate() {
+  if (!gameRunning) return;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw player
+  ctx.fillStyle = player.color;
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  // Draw obstacles
+  obstacles.forEach(ob => {
+    ctx.fillStyle = ob.color;
+    ctx.fillRect(ob.x, ob.y, ob.width, ob.height);
+  });
+
+  // Player physics
+  player.y += player.dy;
+  player.dy += gravity;
+  if (player.y > canvas.height - player.height - 10) {
+    player.y = canvas.height - player.height - 10;
+    player.dy = 0;
+  }
+
+  // Update
+  updateObstacles();
+  checkCollision();
+
+  requestAnimationFrame(animate);
+}
+
+// Events
+window.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.code === "ArrowUp") jump();
+});
+canvas.addEventListener("click", jump);
+
+startBtn.addEventListener("click", startGame);
+playAgain.addEventListener("click", startGame);
+
+muteBtn.addEventListener("click", () => {
+  muted = !muted;
+  muteBtn.textContent = muted ? "🔇" : "🔈";
+});
