@@ -1,0 +1,179 @@
+```css
+/* candy-rush.css - fun, kid-friendly styles for Candy Rush */
+
+/* Reset-ish */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; }
+
+:root{
+  --bg1: #ffecf5;
+  --bg2: #fff7e6;
+  --accent: #ff6fb5;
+  --accent-2: #ffd166;
+  --text: #3a2b3d;
+  --hud-bg: rgba(255,255,255,0.6);
+  --button-glow: 0 6px 18px rgba(255,111,181,0.28);
+  --panel-radius: 16px;
+  --shadow: 0 8px 20px rgba(58,43,61,0.12);
+}
+
+/* Page layout */
+body{
+  font-family: "Comic Sans MS", "Trebuchet MS", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(120deg, var(--bg1), var(--bg2));
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header / HUD */
+header.ui{
+  width: min(980px, 96%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75));
+  padding: 12px 16px;
+  border-radius: var(--panel-radius);
+  box-shadow: var(--shadow);
+  border: 2px solid rgba(255,255,255,0.5);
+}
+header.ui h1{
+  font-size: 1.6rem;
+  letter-spacing: 0.6px;
+  color: #6b2b5b;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.6);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+header.ui h1::before{
+  content: "🍬";
+  font-size: 1.4rem;
+}
+
+/* HUD elements */
+.hud{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.hud #score{
+  font-weight:700;
+  background: var(--hud-bg);
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Buttons */
+button{
+  cursor:pointer;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight:700;
+  box-shadow: var(--button-glow);
+  transform: translateZ(0);
+  user-select: none;
+}
+#startBtn{
+  background: linear-gradient(180deg, var(--accent), #ff4b9a);
+  color: white;
+  font-size: 0.95rem;
+}
+#muteBtn{
+  background: linear-gradient(180deg, var(--accent-2), #ffb84d);
+  color: #3a2b3d;
+}
+
+/* Main canvas area */
+main{
+  width: min(980px, 96%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+#gameCanvas{
+  width: 100%;
+  max-width: 980px;
+  height: auto;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fffdf8, #ffeef7);
+  box-shadow: 0 18px 40px rgba(106,72,100,0.12), inset 0 -6px 18px rgba(255,255,255,0.55);
+  border: 6px solid rgba(255,255,255,0.65);
+  display:block;
+}
+
+/* Overlay (start / game over panel) */
+.overlay{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+.overlay.hidden{ display:none; }
+.overlay .panel{
+  min-width: 260px;
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(58,43,61,0.18);
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,255,0.95));
+  border: 2px solid rgba(255,255,255,0.8);
+}
+.overlay h2{
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #5a2a52;
+}
+#playAgain{
+  display:inline-block;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight:800;
+  background: linear-gradient(180deg,#6ee7b7,#34d399);
+  color: #07332f;
+  box-shadow: 0 10px 30px rgba(52,211,153,0.12);
+}
+
+/* Candy particles / simple animation helpers */
+.candy {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 18px;
+  transform: translate3d(0,0,0);
+  will-change: transform, opacity;
+  animation: floaty 2.4s ease-in-out infinite;
+  box-shadow: 0 6px 18px rgba(58,43,61,0.08);
+}
+@keyframes floaty {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(8deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Small responsive tweaks */
+@media (max-width:720px){
+  header.ui h1{ font-size: 1.2rem; }
+  #gameCanvas{ height: 260px; border-radius: 12px; }
+  .overlay .panel{ min-width: 200px; padding: 14px; }
+}
+
+/* Utility classes */
+.hidden{ display:none !important; }
+.center { display:flex; align-items:center; justify-content:center; }
+
+/* End of candy-rush.css */
+```
